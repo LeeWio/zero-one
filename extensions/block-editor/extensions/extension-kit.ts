@@ -1,7 +1,24 @@
 import { type Value } from 'platejs'
 import { type TPlateEditor, useEditorRef } from 'platejs/react'
 
-import { BasicBlocksKit, BasicMarksKit, ListKit, AlignKit, LineHeightKit } from '.'
+import {
+  BasicBlocksKit,
+  BasicMarksKit,
+  ListKit,
+  AlignKit,
+  LineHeightKit,
+  LinkKit,
+  TocKit,
+  ContentItemMenuKit,
+  DndKit,
+  ColumnKit,
+  CodeBlockKit,
+  DateKit,
+  FloatingToolbarKit,
+  AutoformatKit,
+  BlockMenuKit,
+  TrailingBlockPlugin,
+} from '.'
 
 /**
  * EditorKit
@@ -15,7 +32,15 @@ import { BasicBlocksKit, BasicMarksKit, ListKit, AlignKit, LineHeightKit } from 
  * - List plugins, Table plugins, etc.
  */
 export const ExtensionKit = [
+  // ...ContentItemMenuKit,
+
+  // Elements
   ...BasicBlocksKit,
+  ...CodeBlockKit,
+  ...LinkKit,
+  ...ColumnKit,
+  ...DateKit,
+  ...TocKit,
 
   // Marks
   ...BasicMarksKit,
@@ -24,6 +49,14 @@ export const ExtensionKit = [
   ...ListKit,
   ...AlignKit,
   ...LineHeightKit,
+
+  // Collaboration
+
+  // Editing
+  // ...DndKit,
+  ...AutoformatKit,
+  TrailingBlockPlugin,
+  // ...BlockMenuKit,
 ]
 
 /**

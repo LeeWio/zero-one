@@ -1,0 +1,33 @@
+import { tv } from '@heroui/theme'
+import { DndPlugin } from '@platejs/dnd'
+import { useBlockSelected } from '@platejs/selection/react'
+import { type PlateElementProps, usePluginOption } from 'platejs/react'
+
+export const blockSelectionVariants = tv({
+  base: 'pointer-events-none absolute inset-0 z-1 bg-brand/[.13] transition-opacity',
+  variants: {
+    active: {
+      true: 'opacity-100',
+      false: 'opacity-0',
+    },
+  },
+  defaultVariants: {
+    active: true,
+  },
+})
+
+export const BlockSelection = (props: PlateElementProps) => {
+  const isBlockSelected = useBlockSelected()
+  const isDragging = usePluginOption(DndPlugin, 'isDragging')
+
+  if (!isBlockSelected || props.plugin.key === 'tr' || props.plugin.key === 'table') return null
+
+  return (
+    <div
+      className={blockSelectionVariants({
+        active: isBlockSelected && !isDragging,
+      })}
+      data-slot="block-selection"
+    />
+  )
+}

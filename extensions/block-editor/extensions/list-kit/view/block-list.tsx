@@ -7,6 +7,7 @@ import { useTodoListElement, useTodoListElementState } from '@platejs/list/react
 import { type PlateElementProps, type RenderNodeWrapper, useReadOnly } from 'platejs/react'
 
 import { cn } from '@heroui/theme'
+import { Checkbox } from '@heroui/checkbox'
 
 const config: Record<
   string,
@@ -33,7 +34,7 @@ function List(props: PlateElementProps) {
   const List = isOrderedList(props.element) ? 'ol' : 'ul'
 
   return (
-    <List className="relative m-0 p-0" style={{ listStyleType }} start={listStart}>
+    <List className="relative ml-2 p-0" style={{ listStyleType }} start={listStart}>
       {Marker && <Marker {...props} />}
       {Li ? <Li {...props} /> : <li>{props.children}</li>}
     </List>
@@ -47,10 +48,13 @@ function TodoMarker(props: PlateElementProps) {
 
   return (
     <div contentEditable={false}>
-      {/* todo:bug */}
       <Checkbox
-        className={cn('absolute top-1 -left-6', readOnly && 'pointer-events-none')}
-        {...checkboxProps}
+        isSelected={checkboxProps.checked}
+        onValueChange={checkboxProps.onCheckedChange}
+        onMouseDown={checkboxProps.onMouseDown}
+        lineThrough
+        color="danger"
+        className={cn('absolute  top-1 -left-7', readOnly && 'pointer-events-none')}
       />
     </div>
   )
