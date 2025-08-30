@@ -1,124 +1,105 @@
-import { useMemo } from "react";
 import {
-  type LinkFloatingToolbarState as LinkMenuProps,
-  FloatingLinkUrlInput,
-  useFloatingLinkEdit,
-  useFloatingLinkEditState,
-  useFloatingLinkInsert,
-  useFloatingLinkInsertState,
+	LinkFloatingToolbarState,
+	useFloatingLinkEdit,
+	useFloatingLinkInsertState,
 } from "@platejs/link/react";
-import {
-  type UseVirtualFloatingOptions,
-  flip,
-  offset,
-} from "@platejs/floating";
 import { useFormInputProps, usePluginOption } from "platejs/react";
-
 import { KEYS } from "platejs";
+import { memo, useMemo } from "react";
+import { flip, offset } from "@platejs/floating";
+import { type UseVirtualFloatingOptions } from "@platejs/floating";
+import {
+	useFloatingLinkEditState,
+	useFloatingLinkInsert,
+} from "@platejs/link/react";
+import { TextMenuItem } from "../text-menu/components/text-menu-item";
+import { LinkPreviewPanel } from "../../panels/link-panel/link-preview-panel";
+import { LinkEditorPanel } from "../../panels/link-panel";
 
-export function LinkMenu({ state }: { state?: LinkMenuProps }) {
-  // Get the currently active comment ID (if any)
-  const activeCommentId = usePluginOption({ key: KEYS.comment }, "activeId");
+export const MemoButton = memo(TextMenuItem);
 
-  // Get the currently active suggestion ID (if any)
-  const activeSuggestionId = usePluginOption(
-    { key: KEYS.suggestion },
-    "activeId",
-  );
+export const LinkMenu = ({ state }: { state?: LinkFloatingToolbarState }) => {
+	const activeCommandId = usePluginOption({ key: KEYS.comment }, "activeId");
+	const activeSuggestionId = usePluginOption(
+		{ key: KEYS.suggestion },
+		"activeId",
+	);
 
-  // Floating menu positioning logic
-  const floatingOptions: UseVirtualFloatingOptions = useMemo(() => {
-    return {
-      middleware: [
-        offset(8), // Add spacing between the menu and the reference element
-        flip({
-          // Try fallback placements if the default one doesn't fit
-          fallbackPlacements: ["bottom-end", "top-start", "top-end"],
-          padding: 12, // Keep some distance from viewport edges
-        }),
-      ],
-      // Show the menu above if a comment/suggestion is active, otherwise below
-      placement:
-        activeSuggestionId || activeCommentId ? "top-start" : "bottom-start",
-    };
-  }, [activeSuggestionId, activeCommentId]);
+	const floatingOptions: UseVirtualFloatingOptions = useMemo(() => {
+		return {
+			middleware: [
+				offset(8),
+				flip({
+					fallbackPlacements: ["bottom-end", "top-start", "top-end"],
+					padding: 12,
+				}),
+			],
 
-  // State for inserting a new link
-  const insertState = useFloatingLinkInsertState({
-    ...state,
-    floatingOptions: {
-      ...floatingOptions,
-      ...state?.floatingOptions, // Allow external overrides
-    },
-  });
+			placement:
+				activeSuggestionId || activeCommandId ? "top-start" : "bottom-start",
+		};
+	}, [activeCommandId, activeSuggestionId]);
 
-  // Insert link menu props/hooks
-  const {
-    hidden, // Whether the menu should be hidden
-    props: insertProps, // Props for the floating container
-    ref: insertRef, // Ref for positioning
-    textInputProps, // Props for the input element
-  } = useFloatingLinkInsert(insertState);
+	const insertState = useFloatingLinkInsertState({
+		...state,
+		floatingOptions: {
+			...floatingOptions,
+			...state?.floatingOptions,
+		},
+	});
 
-  // State for editing an existing link
-  const editState = useFloatingLinkEditState({
-    ...state,
-    floatingOptions: {
-      ...floatingOptions,
-      ...state?.floatingOptions,
-    },
-  });
+	const {
+		hidden,
+		props: insertProps,
+		ref: insertRef,
+		textInputProps,
+	} = useFloatingLinkInsert(insertState);
 
-  // Edit link menu props/hooks
-  const {
-    editButtonProps, // Props for the "edit" button
-    props: editProps, // Props for the floating container
-    ref: editRef, // Ref for positioning
-    unlinkButtonProps, // Props for the "unlink" button
-  } = useFloatingLinkEdit(editState);
+	const editState = useFloatingLinkEditState({
+		...state,
+		floatingOptions: {
+			...floatingOptions,
+			...state?.floatingOptions,
+		},
+	});
 
-  // Form input behavior (prevent submitting on Enter)
-  const inputProps = useFormInputProps({
-    preventDefaultOnEnterKeydown: true,
-  });
+	const {
+		editButtonProps,
+		props: editProps,
+		ref: editRef,
+		unlinkButtonProps,
+	} = useFloatingLinkEdit(editState);
 
-  // Do not render anything if hidden
-  if (hidden) return null;
+	const inputProps = useFormInputProps({
+		preventDefaultOnEnterKeydown: true,
+	});
 
-  return (
-    <>
-      {/* Insert link floating menu */}
-      <div
-        ref={insertRef}
-        {...insertProps}
-        className="absolute z-50 bg-white border rounded shadow p-2"
-      >
-        <FloatingLinkUrlInput
-          {...textInputProps}
-          {...inputProps}
-          className="border px-2 py-1 rounded text-sm"
-        />
-      </div>
+	if (hidden) return null;
 
-      {/* Edit link floating menu */}
-      <div
-        ref={editRef}
-        {...editProps}
-        className="absolute z-50 bg-white border rounded shadow p-2 flex gap-2"
-      >
-        <button
-          {...editButtonProps}
-          className="px-2 py-1 text-sm bg-blue-500 text-white rounded"
-        >
-          Edit
-        </button>
-        <button
-          {...unlinkButtonProps}
-          className="px-2 py-1 text-sm bg-red-500 text-white rounded"
-        >
-          Unlink
-        </button>
-      </div>
-    </>
-  );
-}
+	const input = (
+		<LinkEditorPanel
+			textDefaultValue={textInputProps.defaultValue}
+			onTextChange={textInputProps.onChange}
+			textRef={textInputProps.ref}
+		/>
+	);
+
+	const editContent = editState.isEditing ? (
+		input
+	) : (
+		<LinkPreviewPanel
+			onEdit={editButtonProps.onClick}
+			onClear={unlinkButtonProps.onClick}
+		/>
+	);
+	return (
+		<>
+			<div ref={insertRef} {...insertProps}>
+				{input}
+			</div>
+			<div ref={editRef} {...editProps}>
+				{editContent}
+			</div>
+		</>
+	);
+};

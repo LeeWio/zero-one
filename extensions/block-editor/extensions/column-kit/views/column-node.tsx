@@ -1,16 +1,13 @@
 import { cn } from '@heroui/theme'
 import { Trash2 } from 'lucide-react'
 import { useDraggable, useDropLine } from '@platejs/dnd'
-import { Card, CardBody, CardFooter } from '@heroui/card'
 import { BlockSelectionPlugin } from '@platejs/selection/react'
 import { PathApi, TColumnElement } from 'platejs'
 import { ResizableProvider } from '@platejs/resizable'
 import { Tooltip } from '@heroui/tooltip'
-import { Popover, PopoverContent, PopoverTrigger } from '@heroui/popover'
 import {
   PlateElement,
   PlateElementProps,
-  PlateLeafProps,
   useComposedRef,
   useEditorRef,
   useEditorSelector,
@@ -28,6 +25,8 @@ import { Button } from '@heroui/button'
 import { GripHorizontal } from 'lucide-react'
 import { type LucideProps } from 'lucide-react'
 import { Input } from '@heroui/input'
+import { tooltipMotionProps } from '@/util/motion/tooltip-motion'
+import { Snippet } from '@heroui/snippet'
 
 export const ColumnElement = withHOC(
   ResizableProvider,
@@ -64,16 +63,21 @@ export const ColumnElement = withHOC(
           ref={useComposedRef(props.ref, previewRef)}
           className="h-full px-2 pt-2 group-first/column:pl-0 group-last/column:pr-0"
         >
-          <div
-            className={cn(
-              'relative h-full border border-transparent p-1.5',
-              !readOnly && 'rounded-lg border-dashed border-border',
-              isDragging && 'opacity-50'
-            )}
-          >
+          {/* <div */}
+          {/*   className={cn( */}
+          {/*     'relative h-full border border-transparent p-1.5', */}
+          {/*     !readOnly && 'rounded-lg border-dashed border-border', */}
+          {/*     isDragging && 'opacity-50' */}
+          {/*   )} */}
+          {/* > */}
+          {/*   {props.children} */}
+          {/*   {!readOnly && !isSelectionAreaVisible && <DropLine />} */}
+          {/* </div> */}
+
+          <Snippet className="relative" fullWidth hideCopyButton hideSymbol>
             {props.children}
             {!readOnly && !isSelectionAreaVisible && <DropLine />}
-          </div>
+          </Snippet>
         </PlateElement>
       </div>
     )
@@ -173,29 +177,11 @@ function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
       isOpen={open}
       radius="md"
       closeDelay={0}
-      classNames={{
-        base: 'bg-background/10 backdrop-blur-xs backdrop-saturate-150 shadow-xs border border-current/10 rounded-md',
-        content: 'bg-opacity-100 rounded-md flex flex-row py-0.5 px-1 gap-0.5',
-      }}
       delay={0}
-      motionProps={{
-        variants: {
-          exit: {
-            opacity: 0,
-            transition: {
-              duration: 0.1,
-              ease: 'easeIn',
-            },
-          },
-          enter: {
-            opacity: 1,
-            transition: {
-              duration: 0.15,
-              ease: 'easeOut',
-            },
-          },
-        },
+      classNames={{
+        content: 'flex flex-row gap-0.5',
       }}
+      motionProps={tooltipMotionProps}
       content={
         <>
           <Button

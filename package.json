@@ -60,6 +60,7 @@
     "@heroui/toast": "^2.0.14",
     "@heroui/tooltip": "^2.2.21",
     "@heroui/user": "^2.2.20",
+    "@iconify/react": "^6.0.0",
     "@internationalized/date": "^3.9.0",
     "@platejs/ai": "^49.2.15",
     "@platejs/autoformat": "^49.0.0",
