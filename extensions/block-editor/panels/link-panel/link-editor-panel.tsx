@@ -23,7 +23,7 @@ export const LinkEditorPanel = ({
 
 	return (
 		<div
-			className="z-10 inline-flex flex-col w-full items-center justify-center gap-1 rounded-md px-1.5 py-1 shadow-medium"
+			className="z-10 inline-flex flex-col w-full items-center justify-center gap-1 rounded-md px-1.5 py-1 shadow-2xl bg-background/10 backdrop-blur-2xl backdrop-saturate-150"
 			aria-label="Link editor panel"
 		>
 			<Input
@@ -37,6 +37,7 @@ export const LinkEditorPanel = ({
 				size="sm"
 				{...urlProps}
 				ref={urlRef}
+				variant="bordered"
 				placeholder="Paste link"
 				data-plate-focus
 			/>
@@ -51,6 +52,7 @@ export const LinkEditorPanel = ({
 				}
 				size="sm"
 				ref={textRef}
+				variant="bordered"
 				placeholder="Text to display"
 				data-plate-focus
 				defaultValue={textDefaultValue}

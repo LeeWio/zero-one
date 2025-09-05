@@ -35,7 +35,7 @@ export const LinkPreviewPanel = ({
 
 	return (
 		<div
-			className="z-10 inline-flex w-full items-center justify-center gap-1 rounded-md px-1.5 py-1 shadow-medium"
+			className="z-10 inline-flex w-full items-center justify-center gap-1 rounded-md px-1.5 py-1 shadow-2xl bg-background/10 backdrop-blur-2xl backdrop-saturate-150"
 			aria-label="Link preview panel"
 		>
 			<Button

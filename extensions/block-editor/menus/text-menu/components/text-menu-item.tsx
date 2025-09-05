@@ -31,7 +31,6 @@ export const TextMenuItem = React.forwardRef<
 			value,
 			startContent,
 			endContent,
-			className,
 			...props
 		},
 		ref,

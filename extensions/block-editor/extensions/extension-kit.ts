@@ -1,24 +1,27 @@
-import { type Value } from 'platejs'
-import { type TPlateEditor, useEditorRef } from 'platejs/react'
+import { type Value } from "platejs";
+import { type TPlateEditor, useEditorRef } from "platejs/react";
 
 import {
-  BasicBlocksKit,
-  BasicMarksKit,
-  ListKit,
-  AlignKit,
-  LineHeightKit,
-  LinkKit,
-  TocKit,
-  ContentItemMenuKit,
-  DndKit,
-  ColumnKit,
-  CodeBlockKit,
-  DateKit,
-  FloatingToolbarKit,
-  AutoformatKit,
-  BlockMenuKit,
-  TrailingBlockPlugin,
-} from '.'
+	BasicBlocksKit,
+	BasicMarksKit,
+	ListKit,
+	AlignKit,
+	LineHeightKit,
+	LinkKit,
+	TocKit,
+	ContentItemMenuKit,
+	DndKit,
+	ColumnKit,
+	CodeBlockKit,
+	DateKit,
+	FloatingToolbarKit,
+	AutoformatKit,
+	BlockMenuKit,
+	MathKit,
+	SlashKit,
+	TrailingBlockPlugin,
+	BlockPlaceholderKit,
+} from ".";
 
 /**
  * EditorKit
@@ -32,32 +35,36 @@ import {
  * - List plugins, Table plugins, etc.
  */
 export const ExtensionKit = [
-  // ...ContentItemMenuKit,
+	// ...ContentItemMenuKit,
+	...FloatingToolbarKit,
+	...SlashKit,
+	...BlockPlaceholderKit,
 
-  // Elements
-  ...BasicBlocksKit,
-  ...CodeBlockKit,
-  ...LinkKit,
-  ...ColumnKit,
-  ...DateKit,
-  ...TocKit,
+	// Elements
+	...BasicBlocksKit,
+	...CodeBlockKit,
+	...LinkKit,
+	...ColumnKit,
+	...DateKit,
+	...TocKit,
 
-  // Marks
-  ...BasicMarksKit,
+	// Marks
+	...BasicMarksKit,
+	...MathKit,
 
-  // Block Style
-  ...ListKit,
-  ...AlignKit,
-  ...LineHeightKit,
+	// Block Style
+	...ListKit,
+	...AlignKit,
+	...LineHeightKit,
 
-  // Collaboration
+	// Collaboration
 
-  // Editing
-  // ...DndKit,
-  ...AutoformatKit,
-  TrailingBlockPlugin,
-  // ...BlockMenuKit,
-]
+	// Editing
+	// ...DndKit,
+	...AutoformatKit,
+	TrailingBlockPlugin,
+	// ...BlockMenuKit,
+];
 
 /**
  * AppEditor
@@ -69,7 +76,7 @@ export const ExtensionKit = [
  * This type ensures that when you work with the editor,
  * TypeScript knows which plugins and nodes are available.
  */
-export type AppEditor = TPlateEditor<Value, (typeof ExtensionKit)[number]>
+export type AppEditor = TPlateEditor<Value, (typeof ExtensionKit)[number]>;
 
 /**
  * useEditor
@@ -78,4 +85,4 @@ export type AppEditor = TPlateEditor<Value, (typeof ExtensionKit)[number]>
  * By providing `AppEditor`, you get full TypeScript support,
  * including autocompletion and type safety for editor methods.
  */
-export const useEditor = () => useEditorRef<AppEditor>()
+export const useEditor = () => useEditorRef<AppEditor>();
